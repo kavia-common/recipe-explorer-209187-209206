@@ -1,0 +1,54 @@
+---
+export interface Props { value?: string }
+const { value = '' } = Astro.props as Props;
+const placeholder = 'Search recipes, e.g. pasta, vegan, curry';
+---
+
+<form class="search" method="get" action="/">
+  <div class="field">
+    <span class="icon" aria-hidden="true">🔎</span>
+    <input
+      type="search"
+      name="q"
+      aria-label="Search recipes"
+      placeholder={placeholder}
+      value={value}
+      autocomplete="off"
+    />
+    <button class="btn" type="submit">Search</button>
+  </div>
+  <p class="hint">Tip: Press Enter to search. Results update after submit.</p>
+</form>
+
+<style>
+  .search { display: grid; gap: 8px; }
+  .field {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr auto;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 18px var(--shadow-color);
+    padding: 10px 10px 10px 12px;
+  }
+  .icon { opacity: .75 }
+  input {
+    appearance: none;
+    border: 0; outline: none; background: transparent; color: var(--text-color);
+    font-size: 1rem;
+  }
+  .btn {
+    appearance: none; border: 0;
+    background: linear-gradient(135deg, var(--primary), color-mix(in oklab, var(--primary), white 12%));
+    color: white; font-weight: 600;
+    padding: 10px 14px; border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(37,99,235,.35), inset 0 -2px 0 rgba(2,6,23,.18);
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(37,99,235,.4), inset 0 -2px 0 rgba(2,6,23,.2); }
+  .btn:focus-visible { box-shadow: var(--focus); }
+  .hint { margin: 0; color: var(--text-secondary); font-size: .9rem; }
+</style>

@@ -1,11 +1,66 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import SearchBar from '../components/SearchBar.astro';
+import RecipeGrid from '../components/RecipeGrid.astro';
+import { listRecipes } from '../services/recipes';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const { search } = Astro.params;
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get('q') || '';
+const recipes = await listRecipes({ q });
 ---
 
 <Layout>
-	<Welcome />
+  <section class="hero-card">
+    <div class="hero-left">
+      <h1 class="title">Find your next favorite recipe</h1>
+      <p class="subtitle">Search thousands of curated dishes with crisp instructions and ingredient lists.</p>
+      <SearchBar value={q} />
+    </div>
+  </section>
+
+  <section class="results">
+    <div class="results-head">
+      <h2 class="section-title">Results {q ? `for “${q}”` : ''}</h2>
+      <span class="count-badge">{recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}</span>
+    </div>
+    <RecipeGrid recipes={recipes} />
+  </section>
 </Layout>
+
+<style>
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 24px var(--shadow-color);
+    padding: 26px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .title {
+    margin: 0 0 8px;
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    letter-spacing: -.01em;
+  }
+  .subtitle {
+    margin: 0 0 14px;
+    color: var(--text-secondary);
+  }
+
+  .results { margin-top: 28px; }
+  .results-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-title { margin: 0; font-size: 1.1rem; }
+  .count-badge {
+    background: color-mix(in oklab, var(--primary), transparent 90%);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+</style>

@@ -1,0 +1,4 @@
+# Ignore Astro generated types
+.ast ro/
+.astro/**
+dist/

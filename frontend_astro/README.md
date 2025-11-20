@@ -1,47 +1,33 @@
-# Astro Starter Kit: Minimal
+# Recipe Explorer (Astro)
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Modern Astro frontend for browsing, searching, and viewing recipes.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+## Theme
+Ocean Professional:
+- Primary: `#2563EB`
+- Secondary/Success: `#F59E0B`
+- Error: `#EF4444`
+- Background: `#f9fafb`
+- Surface: `#ffffff`
+- Text: `#111827`
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Subtle gradients, rounded corners, and soft shadows are applied in a shared layout.
 
-## 🚀 Project Structure
+## Pages
+- `/` Home: search bar, responsive grid of recipe cards
+- `/recipes/[id]` Recipe detail: title, image, ingredients, steps
 
-Inside of your Astro project, you'll see the following folders and files:
+## Data
+The UI uses a minimal data layer:
+- If `PUBLIC_API_BASE` is set, requests are sent to `${PUBLIC_API_BASE}/recipes` and `/recipes/:id`.
+- Otherwise, an in-memory mock dataset is used.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Environment variables are read via `import.meta.env`.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Commands
+- `npm install`
+- `npm run dev` (dev server)
+- `npm run build` (production build)
+- `npm run preview` (preview build)
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+No additional processes are started by code; this repo follows Astro best practices.

@@ -1,0 +1,96 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getRecipeById, listRecipes, type RecipeSummary } from '../../services/recipes';
+
+// Generate static paths for known recipes (mock or from API if available).
+export async function getStaticPaths() {
+  const recipes: RecipeSummary[] = await listRecipes();
+  return recipes.map((r) => ({ params: { id: r.id } }));
+}
+
+const { id } = Astro.params;
+const recipe = await getRecipeById(id!);
+if (!recipe) {
+  // For unknown ids at build time, redirect to home.
+  throw Astro.redirect('/');
+}
+---
+
+<Layout>
+  <article class="recipe">
+    <header class="header">
+      <div class="title-wrap">
+        <h1 class="title">{recipe.title}</h1>
+        <div class="meta">
+          <span class="pill">{recipe.duration} min</span>
+          <span class="pill">{recipe.servings} servings</span>
+          {recipe.tags && recipe.tags.map((t) => <span class="tag">{t}</span>)}
+        </div>
+      </div>
+      {recipe.image && (
+        <img class="hero" src={recipe.image} alt={recipe.title} loading="eager" />
+      )}
+    </header>
+
+    <section class="grid">
+      <section class="card">
+        <h2>Ingredients</h2>
+        <ul class="list">
+          {recipe.ingredients.map((it) => <li>{it}</li>)}
+        </ul>
+      </section>
+      <section class="card">
+        <h2>Steps</h2>
+        <ol class="list">
+          {recipe.steps.map((s) => <li>{s}</li>)}
+        </ol>
+      </section>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .recipe { display: grid; gap: 18px; }
+  .header {
+    display: grid; gap: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 24px var(--shadow-color);
+    overflow: hidden;
+  }
+  .title-wrap { padding: 20px; }
+  .title { margin: 0 0 8px; font-size: clamp(1.4rem, 2.4vw, 2rem); }
+  .meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    background: color-mix(in oklab, var(--secondary), transparent 85%);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 6px 10px; border-radius: 999px; font-size: 0.85rem;
+  }
+  .tag {
+    background: color-mix(in oklab, var(--primary), transparent 88%);
+    border: 1px solid var(--border-color);
+    padding: 6px 10px; border-radius: 999px; font-size: 0.8rem;
+  }
+  .hero {
+    width: 100%; height: 320px; object-fit: cover;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .grid {
+    display: grid; grid-template-columns: 1fr; gap: 16px;
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 18px var(--shadow-color);
+    padding: 18px;
+  }
+  h2 { margin-top: 0; }
+  .list { margin: 0; padding-left: 18px; }
+</style>

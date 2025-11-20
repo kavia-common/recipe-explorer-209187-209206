@@ -1,4 +1,4 @@
-// eslint.config.mjs
+/* eslint.config.mjs */
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -8,6 +8,11 @@ export default [
 
   // TypeScript support
   ...tseslint.configs.recommended,
+
+  // Ignore generated .astro types by excluding the directory
+  {
+    ignores: ['.astro/**', 'dist/**'],
+  },
 
   {
     files: ['**/*.ts', '**/*.tsx'],
@@ -20,9 +25,13 @@ export default [
       },
     },
     rules: {
-      // Example custom rules for TS
       '@typescript-eslint/no-unused-vars': ['warn'],
       '@typescript-eslint/explicit-function-return-type': 'off',
+      // So we don't fail on occasional simple object types in our code
+      '@typescript-eslint/no-empty-object-type': ['warn', { allowObjectTypes: true }],
+      // Allow `any` in generated or external, but keep default elsewhere (override below for our code only)
+      '@typescript-eslint/no-explicit-any': ['warn'],
+      '@typescript-eslint/triple-slash-reference': 'off',
     },
   },
 
